@@ -1,0 +1,40 @@
+name: Build Tauri App for Windows
+
+on:
+  push:
+    branches:
+      - main  # Passe den Branch an, falls du einen anderen nutzt
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Rust einrichten
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: x86_64-pc-windows-msvc
+
+      - name: Abhängigkeiten installieren
+        run: npm install # Oder "npm install" bzw. "yarn install", je nach Paketmanager
+
+      - name: Tauri Abhängigkeiten installieren
+        run: cargo install tauri-cli
+
+      - name: App für Windows bauen
+        run: pnpm tauri build # Oder "npm run tauri build"
+
+      - name: Release-Assets hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Build
+          path: src-tauri/target/release/bundle/msi/*  # Ändere zu .exe, wenn du eine ausführbare Datei möchtest
