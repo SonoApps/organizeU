@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderne Web App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.auth0.com/js/auth0/9.19/auth0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5563c1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app" style="display: none;">
+        <h1>Willkommen zur Web App</h1>
+        <button onclick="showMessage()">Klick mich</button>
+    </div>
+
+    <script>
+        var webAuth = new auth0.WebAuth({
+            domain: "sono-labs.eu.auth0.com",
+            clientID: "yHSy0NPtK3HkymKuQOZN2njqKFytf1ga",
+            redirectUri: window.location.href,
+            responseType: "token id_token",
+            scope: "openid profile email"
+        });
+
+        function handleAuthentication() {
+            webAuth.parseHash(function(err, authResult) {
+                if (authResult && authResult.accessToken && authResult.idToken) {
+                    localStorage.setItem("access_token", authResult.accessToken);
+                    localStorage.setItem("id_token", authResult.idToken);
+                    document.getElementById("app").style.display = "block";
+                } else {
+                    login();
+                }
+            });
+        }
+
+        function login() {
+            webAuth.authorize();
+        }
+
+        function showMessage() {
+            alert("Hallo! Willkommen in der modernen Web App.");
+        }
+
+        handleAuthentication();
+    </script>
+</body>
+</html>
