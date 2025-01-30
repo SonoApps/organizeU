@@ -27,7 +27,7 @@
   },
   "plugins": {
       "updater": {
-      "active": true,
+      "active": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlGQ0QyODNDRDZCQzg4NkUKUldSdWlMeldQQ2pObnpTQjVYOVZRR2p5Q25kY2hHRlVoTDVOdXUyNDlrUVljVWdWZ0x2Sm05RjEK",
       "endpoints": ["https://github.com/SonoApps/organizeU/releases/latest"]
     }
