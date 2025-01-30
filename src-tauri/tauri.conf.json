@@ -10,9 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "organizeu-v1",
-        "width": 800,
-        "height": 600
+        "title": "organizeu-v1"
       }
     ],
     "security": {
@@ -24,6 +22,14 @@
     "targets": "all",
     "icon": [
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+      "updater": {
+      "active": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlGQ0QyODNDRDZCQzg4NkUKUldSdWlMeldQQ2pObnpTQjVYOVZRR2p5Q25kY2hHRlVoTDVOdXUyNDlrUVljVWdWZ0x2Sm05RjEK",
+      "endpoints": ["https://github.com/SonoApps/organizeU/releases/latest"]
+    }
   }
 }
