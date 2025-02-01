@@ -1,44 +1,21 @@
-const { invoke } = window.__TAURI__.core;
-import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
-import { relaunch } from "@tauri-apps/api/process";
-import { ask, message } from "@tauri-apps/api/dialog";
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from '@tauri-apps/plugin-notification';
+// when using `"withGlobalTauri": true`, you may use
+// const { isPermissionGranted, requestPermission, sendNotification, } = window.__TAURI__.notification;
 
-let greetInputEl;
-let greetMsgEl;
+// Do you have permission to send a notification?
+let permissionGranted = await isPermissionGranted();
 
-async function greet() {
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
+// If not we need to request it
+if (!permissionGranted) {
+  const permission = await requestPermission();
+  permissionGranted = permission === 'granted';
 }
 
-async function checkForUpdates() {
-  try {
-    const { shouldUpdate, manifest } = await checkUpdate();
-
-    if (shouldUpdate) {
-      const userAgreed = await ask(
-        `Ein neues Update (${manifest?.version}) ist verfügbar! Möchtest du es jetzt installieren?`,
-        { title: "Update verfügbar", type: "info" }
-      );
-
-      if (userAgreed) {
-        await installUpdate();
-        await message("Update wurde installiert. Die App wird jetzt neu gestartet!", { type: "info" });
-        await relaunch();
-      }
-    }
-  } catch (error) {
-    console.error("Fehler beim Update:", error);
-  }
+// Once permission has been granted we can send the notification
+if (permissionGranted) {
+  sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  greetInputEl = document.querySelector("#greet-input");
-  greetMsgEl = document.querySelector("#greet-msg");
-  document.querySelector("#greet-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    greet();
-  });
-
-  // Prüfe beim Start auf Updates
-  checkForUpdates();
-});
